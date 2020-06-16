@@ -25,6 +25,11 @@ jobs:
         with:
           name: dist
           path: dist
+      - name: Archive test coverage artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: coverage
 
   publish:
     needs: prepush-and-build
@@ -46,14 +51,14 @@ jobs:
         run: yarn run gen-public-package.json
       - name: Generate public README.md
         run: cp README.md dist/
-      - name: NPM Authentication
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{secrets.npm_token}}
-      - name: Publishing NPM Package
-        run: npm publish dist --access public && echo "Successfully released version $(node -p "require('./package.json').version")!"
-      - name: Pushing new commit && tag to the git repo
-        run: git push --no-verify && git push --tags --no-verify
+#      - name: NPM Authentication
+#        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#        env:
+#          NPM_TOKEN: ${{secrets.npm_token}}
+#      - name: Publishing NPM Package
+#        run: npm publish dist --access public && echo "Successfully released version $(node -p "require('./package.json').version")!"
+#      - name: Pushing new commit && tag to the git repo
+#        run: git push --no-verify && git push --tags --no-verify
       - name: Upload coverage report to codecov.io
         run: npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
         env:
