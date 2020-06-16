@@ -43,10 +43,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: dist
-      - name: Download 'coverage' from the previous Job
-        uses: actions/download-artifact@v1
-        with:
-          name: coverage
       - name: Set GIT username & email
         run: git config --global user.name 'GIT Workflow CI' && git config --global user.email dev@korniychuk.pro
       - name: Update package patch version
@@ -55,18 +51,26 @@ jobs:
         run: yarn run gen-public-package.json
       - name: Generate public README.md
         run: cp README.md dist/
-#      - name: NPM Authentication
-#        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-#        env:
-#          NPM_TOKEN: ${{secrets.npm_token}}
-#      - name: Publishing NPM Package
-#        run: npm publish dist --access public && echo "Successfully released version $(node -p "require('./package.json').version")!"
-#      - name: Pushing new commit && tag to the git repo
-#        run: git push --no-verify && git push --tags --no-verify
-      - name: Upload coverage report to codecov.io
-        run: echo npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
+      - name: Download 'coverage' from the previous Job
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+      - name: NPM Authentication
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         env:
-          CODECOV_TOKEN: ${{secrets.codecov_token}}
+          NPM_TOKEN: ${{secrets.npm_token}}
+      - name: Publishing NPM Package
+        run: npm publish dist --access public && echo "Successfully released version $(node -p "require('./package.json').version")!"
+      - name: Pushing new commit && tag to the git repo
+        run: git push --no-verify && git push --tags --no-verify
       - name: Upload coverage report to codecov.io
         run: npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
         env:
