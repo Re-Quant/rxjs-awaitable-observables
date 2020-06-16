@@ -43,6 +43,10 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: dist
+      - name: Download 'coverage' from the previous Job
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage
       - name: Set GIT username & email
         run: git config --global user.name 'GIT Workflow CI' && git config --global user.email dev@korniychuk.pro
       - name: Update package patch version
