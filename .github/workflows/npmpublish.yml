@@ -55,6 +55,6 @@ jobs:
       - name: Pushing new commit && tag to the git repo
         run: git push --no-verify && git push --tags --no-verify
       - name: Upload coverage report to codecov.io
-        run: npx codecov --token "${CODECOV_TOKEN}"
+        run: npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
         env:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
