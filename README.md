@@ -1,6 +1,6 @@
 # RxJS Awaitable Observables
 
-<p>
+<p align="center">
   <a target="_blank" href="https://github.com/z-brain/rxjs-awaitable-observables/actions?query=workflow%3A%22Build%22">
     <img alt="Build status" src="https://github.com/z-brain/rxjs-awaitable-observables/workflows/Build/badge.svg">
   </a>
@@ -15,7 +15,7 @@
   </a>
 </p>
 
-<p align="center">🧨💥💪 Use `async`/`await` with any RxJS stream and be happy ✅👨‍💻😎</p>
+<p align="center">🧨 💥 💪  <strong>Use `async`/`await` with any RxJS stream and be happy</strong>  ✅ 👨‍💻 😎</p>
 
 _Notice: If you have any propositions feel free to make an issue or create a pull request._
 
@@ -34,14 +34,14 @@ Your `main.ts`:
 import '@z-brain/rxjs-awaitable-observables';
 ```
 
-That is all 🙂 Feel free to use async/await with observables 😉
+That is all 🙂&nbsp; Feel free to use async/await with observables 😉
 
 **Detailed description:**
 
 * In case of Angular project it can be `main.ts`
 * In case of a server project it is the entry file of your server app (`index.ts` or `server.ts` in most cases)
 
-# 3. Configure you testing framework
+### 3. Configure you testing framework
 
 If you are going to use async/await with observables in any kind of your tests (unit / e2e) there are two ways to do it:  
 
