@@ -15,12 +15,14 @@
   </a>
 </p>
 
-<p align="center">🧨 &nbsp;&nbsp; 💥 &nbsp;&nbsp; 💪 &nbsp;&nbsp; <strong>Use `async`/`await` with any RxJS stream and be happy</strong> &nbsp;&nbsp; ✅ &nbsp;&nbsp; 👨‍💻 &nbsp;&nbsp; 😎</p>
+<p align="center">🧨 &nbsp;&nbsp; 💥 &nbsp;&nbsp; 💪 &nbsp;&nbsp; <strong>Use async/await with any RxJS stream and be happy</strong> &nbsp;&nbsp; ✅ &nbsp;&nbsp; 👨‍💻 &nbsp;&nbsp; 😎</p>
 
 <p align="center"><i>Zero third-party dependencies</i></p>
 
 <p>&nbsp;</p>
 <p><i>Notice: If you have any propositions feel free to make an issue or create a pull request.</i></p>
+
+![IDE Demo](/resources/ide-demo.png)
 
 ## Installation
 

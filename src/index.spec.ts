@@ -11,7 +11,7 @@ describe('RxJS awaitable Observables', () => {
       const value$: Observable<number> = $$.of(123);
 
       // act
-      const value = await value$;
+      const value = await value$; /* ? */
 
       // assert
       expect(value).toBe(123);
