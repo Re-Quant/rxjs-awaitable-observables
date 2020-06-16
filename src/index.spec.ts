@@ -53,7 +53,7 @@ describe('RxJS awaitable Observables', () => {
     it('Should take the initial value of Subject + .startWith()', async () => {
       // arrange
       const newValues$: Observable<number> = new Subject<number>();
-      const value$ = newValues$.pipe($.startWith(123))
+      const value$ = newValues$.pipe($.startWith(123));
 
       // act
       const value = await value$;
@@ -70,7 +70,6 @@ describe('RxJS awaitable Observables', () => {
       value$.next(333);
       value$.next(444);
 
-
       // act
       const value = await value$;
 
@@ -85,9 +84,10 @@ describe('RxJS awaitable Observables', () => {
 
       // act
       try {
-        await err$
+        await err$;
       } catch (e) {
         // assert
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         expect(e.message).toMatch(MSG);
       }
     });
@@ -101,7 +101,7 @@ describe('RxJS awaitable Observables', () => {
 
       // act
       const promise = Promise.resolve(10)
-                             .then(multiplier => value$.then(v => v * multiplier));
+          .then(multiplier => value$.then(v => v * multiplier));
 
       // assert
       return expect(promise).resolves.toBe(1230);

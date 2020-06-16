@@ -10,9 +10,9 @@ declare module 'rxjs' {
   }
 }
 
-Observable.prototype.then = function (
-    onFulfilled?: ((value: any) => any) | undefined | null,
-    onRejected?: ((reason: any) => any) | undefined | null,
+Observable.prototype.then = function then(
+  onFulfilled?: ((value: any) => any) | undefined | null,
+  onRejected?: ((reason: any) => any) | undefined | null,
 ) {
   return this.pipe(first()).toPromise().then(onFulfilled, onRejected);
 };
