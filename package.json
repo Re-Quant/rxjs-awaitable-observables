@@ -28,7 +28,8 @@
     "test:watch": "npm run test -- --watch",
     "tpl-repo": "tools/merge-with-repository-template.sh",
     "tpl-repo:check": "npm run tpl-repo -- check",
-    "tpl-repo:merge": "npm run tpl-repo -- merge"
+    "tpl-repo:merge": "npm run tpl-repo -- merge",
+    "gen-public-package.json": "tools/gen-public-package.js"
   },
   "peerDependencies": {
     "rxjs": ">= 6.0.0 <8.0.0"
