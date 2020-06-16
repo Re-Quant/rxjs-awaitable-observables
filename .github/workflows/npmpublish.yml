@@ -66,4 +66,4 @@ jobs:
       - name: Upload coverage report to codecov.io
         run: npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
         env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+          CODECOV_TOKEN: ${{secrets.codecov_token}}
