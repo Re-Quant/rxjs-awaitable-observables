@@ -1,57 +1,165 @@
-# Modern Wallaby JS Starter (TypeScript + Babel + Jest)
+# RxJS Awaitable Observables
 
-*Notice: If you have any propositions feel free to make an issue or create a pull request.*
+<p>
+  <a target="_blank" href="https://github.com/z-brain/rxjs-awaitable-observables/actions?query=workflow%3A%22Build%22">
+    <img alt="Build status" src="https://github.com/z-brain/rxjs-awaitable-observables/workflows/Build/badge.svg">
+  </a>
+  <a target="_blank" href="https://www.npmjs.com/package/@z-brain/rxjs-awaitable-observables">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/@z-brain/rxjs-awaitable-observables.svg">
+  </a>
+  <a target="_blank" href="https://codecov.io/gh/z-brain/rxjs-awaitable-observables">
+    <img alt="Code Coverage" src="https://codecov.io/gh/z-brain/rxjs-awaitable-observables/branch/master/graph/badge.svg">
+  </a>
+  <a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0">
+    <img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg">
+  </a>
+</p>
 
-## Features
+<p align="center">🧨💥💪 Use `async`/`await` with any RxJS stream and be happy ✅👨‍💻😎</p>
 
-* Wallaby JS works out of the box without any additional config  
-  Notice: How to run in "Without Configuration" mode ([Official Wallaby JS Guide](https://wallabyjs.com/docs/intro/config.html#automatic-configuration))
-* [ESLint](https://eslint.org) for linting JS & TS files ([TSLint is deprecated in 2019](https://github.com/palantir/tslint#tslint)). Basic rules configured.
-* Very strict linting [config](/src/.eslintrc.js) ([airbnb](https://www.npmjs.com/package/eslint-config-airbnb-base) + [unicorn](https://www.npmjs.com/package/eslint-plugin-unicorn) + [some other plugins](/src/.eslintrc.js#L11))
-* Unit Testing via [Jest](https://jestjs.io/) 24+
-* Additional Jest matchers from [`jest-extended`](https://github.com/jest-community/jest-extended) configured
-* [TypeScript](http://typescriptlang.org/) 3.7+ via [Babel](https://babeljs.io/docs/en/babel-preset-typescript)
-* Yarn for packages installation and [`check-yarn`](/tools/check-yarn.js) utility to prevent packages installation via `npm`
-* [`.nvmrc`](https://github.com/nvm-sh/nvm#nvmrc)
-* Nothing platform related. This repository template can be used for NodeJS and for Browser development.
-* Git hooks via [husky](https://www.npmjs.com/package/husky)
-* [Utility](/tools/merge-with-repository-template.sh) to automatically pull updates from this template repository (`npm run tpl-repo:merge`)
+_Notice: If you have any propositions feel free to make an issue or create a pull request._
 
-## Ways to use
+## Installation
 
-1. Clone as is
+### 1. Install the package
 
-    1. `git clone git@github.com:korniychuk/wallaby-ts-starter.git`
-    2. `cd wallaby-ts-starter`
-    3. `yarn`
-2. Fork
+`yarn add @z-brain/rxjs-awaitable-observables`  
+or  
+`npm i -s @z-brain/rxjs-awaitable-observables`
 
-    0. Click **Fork** git button
-    1. `git clone git@github.com:YOUR_GIT_NAME/wallaby-ts-starter.git`
-    2. `cd wallaby-ts-starter`
-    3. `yarn`
-3. Creating from template
+### 2. Add the import line of the package to your entry .ts files
 
-    0. Click **Fork** git button
-    1. Create new repository and specify template ![template](./resources/readme.git-create-from-template.png)
-    1. `git clone git@github.com:YOUR_GIT_NAME/NEW_REPOSITORY_NAME.git`
-    2. `cd NEW_REPOSITORY_NAME`
-    3. `yarn`
-4. Using with already cloned repository as an additional origin for pulling updates
+Your `main.ts`:
+```typescript
+import '@z-brain/rxjs-awaitable-observables';
+```
 
-    1. Automatically
-    
-       ```bash
-       npm run merge-tpl-repo
-       ```
-    
-    2. Manually
+That is all 🙂 Feel free to use async/await with observables 😉
 
-        1. `git remote add template git@github.com:korniychuk/wallaby-ts-starter.git`
-        2. `git fetch template`
-        3. `git merge --allow-unrelated-histories template/master`
+**Detailed description:**
 
-## How to
+* In case of Angular project it can be `main.ts`
+* In case of a server project it is the entry file of your server app (`index.ts` or `server.ts` in most cases)
+
+# 3. Configure you testing framework
+
+If you are going to use async/await with observables in any kind of your tests (unit / e2e) there are two ways to do it:  
+
+1. Add a setup file with the import to you testing framework. In case of `Jest` it can be done via `setupFiles` or `setupFilesAfterEnv`. **(recommended)**
+
+  ```javascript
+  // jest.config.js
+  module.exports = {
+  ...
+  setupFiles: [ './jest.setup.ts' ],
+  ...
+  };
+  
+  // jest.setup.ts
+  import '@z-brain/rxjs-awaitable-observables';
+  ```
+2. Or you can manually import the package to each of your test **(unrecommended)**
+
+## Usage examples
+
+**1. Simple example: async/await works with completed observables**
+
+```typescript
+const value$ = $$.of(123);
+const value = await value$;
+expect(value).toBe(123);
+```
+
+**2. Take the first value in the stream**
+```typescript
+const value$: Observable<number> = $$.of(111, 222, 333);
+const value = await value$;
+expect(value).toBe(111);
+```
+
+**3. Takes the last value of a completed stream**
+```typescript
+const value$: Observable<number> = $$.of(111, 222, 333);
+const value = await value$.pipe($.last());
+expect(value).toBe(333);
+```
+
+**4. Take the initial value of `Subject` + `.startWith()`**
+```typescript
+      const newValues$: Observable<number> = new Subject<number>();
+      const value$ = newValues$.pipe($.startWith(123));
+
+      const value = await value$;
+      expect(value).toBe(123);
+```
+
+**5. Take the first value of `ReplaySubject`**
+```typescript
+const value$ = new ReplaySubject<number>(2);
+value$.next(111);
+value$.next(222);
+value$.next(333);
+value$.next(444);
+
+const value = await value$;
+
+expect(value).toBe(333);
+```
+
+**6. Error handling using try/catch**
+```typescript
+const MSG = 'Something went wrong';
+const err$ = $$.throwError(new Error(MSG));
+
+try {
+  await err$;
+} catch (e) {
+  expect(e.message).toMatch(MSG);
+}
+```
+
+**7. Manually .then() call (Promises integration)**
+```typescript
+const value$: Observable<number> = $$.of(123);
+
+const promise = Promise.resolve(10)
+                       .then(multiplier => value$.then(v => v * multiplier));
+
+return expect(promise).resolves.toBe(1230);
+```
+
+## How does it work?
+
+* This package patches `Observables`'s prototype and adds `.then()` method to make all `Observable`s and its children work with `async`/`await` as is without the necessary to call `.toPromise()`
+* Yes, the package patches .prototype of another package (RxJS).  
+  In theory, it can be dangerous. However, this package does it enough carefully.  
+  We already saw some successful examples of patching .prototype even build-in functions. (Zone.js for example)  
+  I suggest don't afraid and make our daily work easier and our code more beautiful.
+
+**100% test coverage**:  
+```
+async/await tests
+  ✅ async/await should work with completed observables
+  ✅ Should take the first value in the stream
+  ✅ Should take the last value of a completed stream
+  ✅ Should take the current value of BehaviorSubject
+  ✅ Should take the initial value of Subject + .startWith()
+  ✅ Should take the first value of ReplaySubject
+  ✅ try/catch should handle an error from the stream via async/await
+Check integration with Promises
+  ✅ Should work with manually .then() call
+```
+
+## Development notes
+
+### Quick Start
+
+```bash
+cd /code/z-brain
+git clone git@github.com:z-brain/rxjs-awaitable-observables.git
+cd rxjs-awaitable-observables
+yarn install
+```
 
 ### How to use NodeJS version from the `.nvmrc`
 
@@ -81,6 +189,26 @@
 
   `npm run test -- src/my.spec.ts`  
   `npm run test:watch -- src/my.spec.ts`
+
+### How to build and publish NPM package
+
+*NPM Token:* `1cda...0558`
+
+CI configuration details here: [.github/workflows/npmpublish.yml](.github/workflows/npmpublish.yml)
+
+```bash
+npm run pre-push
+&& npm version patch -m 'Update package version version to %s'
+&& npm run gen-public-package.json
+&& cp README.md dist/
+&& npm publish dist --access public
+&& git push --no-verify && git push --tags --no-verify
+```
+
+### How to build package to local installation
+
+1. `yarn run build:local`
+2. Then you can install a local package build from path `file:.../rxjs-awaitable-observables/dist`.
 
 ## Author
 
