@@ -180,6 +180,7 @@ fabric.properties
 
 # JavaScript, TypeScript, NodeJS
 /dist
+/coverage
 /package-lock.json
 /node_modules
 *.tsbuildinfo
