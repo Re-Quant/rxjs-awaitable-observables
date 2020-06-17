@@ -1,6 +1,6 @@
 import * as $ from 'rxjs/operators';
 import * as $$ from 'rxjs';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, ReplaySubject, EmptyError } from 'rxjs';
 
 import './index';
 
@@ -91,20 +91,41 @@ describe('RxJS awaitable Observables', () => {
         expect(e.message).toMatch(MSG);
       }
     });
+
+    it(`Should throw an ${ EmptyError.name } on completing observable without message`, async () => {
+      // arrange
+      const emptyStream$ = $$.EMPTY;
+
+      try {
+        // act
+        await emptyStream$;
+      } catch (e) {
+        // assert
+        expect(e).toBeInstanceOf(EmptyError);
+      }
+
+    });
   });
 
   describe('Check integration with Promises', () => {
 
     it('Should work with manually .then() call', () => {
       // arrange
-      const value$: Observable<number> = $$.of(123);
+      const value$: Observable<number> = $$.of(111);
+      const multiplayer10$ = new BehaviorSubject(10);
+      const multiplayer2$ = new ReplaySubject<number>(1); multiplayer2$.next(2);
 
       // act
-      const promise = Promise.resolve(10)
-          .then(multiplier => value$.then(v => v * multiplier));
+      const promise = Promise
+          // 1. Passing an rxjs stream to Promise.resolve
+          .resolve(multiplayer10$)
+          // 2. Returning a sync value from 'then'
+          .then(a => multiplayer2$.then(b => a * b))
+          // 3. Returning a promise from 'then'
+          .then(multiplier => value$.then(v => Promise.resolve(v * multiplier)));
 
       // assert
-      return expect(promise).resolves.toBe(1230);
+      return expect(promise).resolves.toBe(2220);
     });
 
   });

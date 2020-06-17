@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { Observable, Subscription, EmptyError } from 'rxjs';
 
 declare module 'rxjs' {
   export interface Observable<T> {
@@ -14,5 +13,23 @@ Observable.prototype.then = function then(
   onFulfilled?: ((value: any) => any) | undefined | null,
   onRejected?: ((reason: any) => any) | undefined | null,
 ) {
-  return this.pipe(first()).toPromise().then(onFulfilled, onRejected);
+  return new Promise((resolve, reject) => {
+    const subs = new Subscription();
+    subs.add(
+      this.subscribe({
+        next: (value) => {
+          resolve(onFulfilled ? onFulfilled(value) : value);
+          subs.unsubscribe();
+        },
+        error: (err) => {
+          reject(onRejected ? onRejected(err) : err);
+        },
+        complete: () => {
+          const err = new EmptyError();
+          reject(onRejected ? onRejected(err) : err);
+        },
+      }),
+    );
+  });
+
 };

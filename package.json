@@ -32,7 +32,7 @@
     "gen-public-package.json": "tools/gen-public-package.js"
   },
   "peerDependencies": {
-    "rxjs": ">= 6.0.0 <8.0.0"
+    "rxjs": ">= 6.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.10.2",
@@ -52,7 +52,7 @@
     "jest": "~26.0.1",
     "jest-extended": "~0.11.5",
     "rimraf": "~3.0.2",
-    "rxjs": "~6.5.5",
+    "rxjs": "7.0.0-beta.0",
     "typescript": "~3.9.5"
   },
   "husky": {
