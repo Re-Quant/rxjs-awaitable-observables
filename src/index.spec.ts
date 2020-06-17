@@ -92,7 +92,7 @@ describe('RxJS awaitable Observables', () => {
       }
     });
 
-    it(`Should throw an ${ EmptyError.name } on completing observable without message`, async () => {
+    it(`Should throw an ${ EmptyError.name } on completing observable without a message`, async () => {
       // arrange
       const emptyStream$ = $$.EMPTY;
 
@@ -128,6 +128,27 @@ describe('RxJS awaitable Observables', () => {
       return expect(promise).resolves.toBe(2220);
     });
 
-  });
+    it('Empty .then() call should just return a promise with the value without any errors', () => {
+      // arrange
+      const value$ = $$.of(111);
 
+      // act
+      const value = value$.then();
+
+      // assert
+      return expect(value).resolves.toBe(111);
+    });
+
+    it('In case of error in the stream empty .then() call should do nothing and return rejected promise with the error', () => {
+      // arrange
+      const value$ = $$.throwError(new Error('My Error'));
+
+      // act
+      const value = value$.then();
+
+      // assert
+      return expect(value).rejects.toThrowError('My Error');
+    });
+
+  });
 });

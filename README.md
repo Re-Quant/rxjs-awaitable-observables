@@ -123,7 +123,18 @@ try {
 }
 ```
 
-**7. Manually .then() call (Promises integration)**
+**7. throw an EmptyError on completing observable without a message**
+```typescript
+const emptyStream$ = $$.EMPTY;
+
+try {
+    await emptyStream$;
+} catch (e) {
+    expect(e).toBeInstanceOf(EmptyError);
+}
+```
+
+**8. Manually .then() call (Promises integration)**
 ```typescript
 const value$: Observable<number> = $$.of(123);
 
@@ -151,8 +162,12 @@ async/await tests
   ✅ Should take the initial value of Subject + .startWith()
   ✅ Should take the first value of ReplaySubject
   ✅ try/catch should handle an error from the stream via async/await
+  ✅ Should throw an ${ EmptyError.name } on completing observable without message
 Check integration with Promises
   ✅ Should work with manually .then() call
+  ✅ Empty .then() call should just return a promise with the value without any errors
+  ✅ In case of error in the stream empty .then() call should do nothing and return rejected promise with the error (1 ms)
+
 ```
 
 ## Development notes
