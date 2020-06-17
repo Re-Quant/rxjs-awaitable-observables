@@ -3,7 +3,7 @@
   "description": "🧨 This package makes async/await working with Observables without .toPromise() 💥",
   "license": "GPL-3.0",
   "private": false,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "bugs": {
     "url": "https://github.com/z-brain/rxjs-awaitable-observables/issues"
   },
