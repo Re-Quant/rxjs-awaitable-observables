@@ -92,7 +92,7 @@ describe('RxJS awaitable Observables', () => {
       }
     });
 
-    it(`Should throw an ${ EmptyError.name } on completing observable without a message`, async () => {
+    it('Should throw an EmptyError.name on completing observable without a message', async () => {
       // arrange
       const emptyStream$ = $$.EMPTY;
 
