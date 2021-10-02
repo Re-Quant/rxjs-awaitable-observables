@@ -4,74 +4,57 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
     branches:
       - master
+      - develop
 
 jobs:
-  prepush-and-build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: 14.4
+          node-version: 14.15
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Yarn install
         run: yarn install
-      - name: Runing prepush
-        run: JEST_COLLECT_COVERAGE=true yarn run pre-push
+
+      - name: Runing lint, tests and make build
+        run: yarn run ci
+
+      - name: Set GIT username & email
+        run: git config --global user.name 'GIT Workflow CI' && git config --global user.email dev@korniychuk.pro
+
+      - run: npm version patch -m 'Update package version version to %s'
+
+      - name: Generate public package.json
+        run: yarn run gen-public-package.json
+
+      - name: Generate public README.md
+        run: cp README.md dist/
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v1
         with:
           name: dist
           path: dist
-      - name: Archive test coverage artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: coverage
-          path: coverage
 
-  publish:
-    needs: prepush-and-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-      - name: Download 'dist' from the previous Job
-        uses: actions/download-artifact@v1
-        with:
-          name: dist
-      - name: Set GIT username & email
-        run: git config --global user.name 'GIT Workflow CI' && git config --global user.email dev@korniychuk.pro
-      - name: Update package patch version
-        run: npm version patch -m 'Update package version version to %s'
-      - name: Generate public package.json
-        run: yarn run gen-public-package.json
-      - name: Generate public README.md
-        run: cp README.md dist/
-      - name: Download 'coverage' from the previous Job
-        uses: actions/download-artifact@v1
-        with:
-          name: coverage
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: true
-      - name: NPM Authentication
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+      - run: npm publish --access public
+        working-directory: ./dist
         env:
-          NPM_TOKEN: ${{secrets.npm_token}}
-      - name: Publishing NPM Package
-        run: npm publish dist --access public && echo "Successfully released version $(node -p "require('./package.json').version")!"
-      - name: Pushing new commit && tag to the git repo
-        run: git push --no-verify && git push --tags --no-verify
-      - name: Upload coverage report to codecov.io
-        run: npx codecov --token "${CODECOV_TOKEN}" --disable=gcov
-        env:
-          CODECOV_TOKEN: ${{secrets.codecov_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: git push --no-verify & git push --tags --no-verify

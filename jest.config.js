@@ -1,8 +1,7 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-const toBoolean = value => (value === 'true' ? true : !!+value);
-
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -20,13 +19,13 @@ module.exports = {
   // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: toBoolean(process.env.JEST_COLLECT_COVERAGE),
+  // collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: ['src/**/*.ts'],
+  // collectCoverageFrom: null,
 
   // The directory where Jest should output its coverage files
-  // coverageDirectory: null,
+  coverageDirectory: '../coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -37,8 +36,8 @@ module.exports = {
   coverageReporters: [
     //   "json",
     //   "text",
-    'lcov',
     'text-summary',
+    'lcov',
     //   "clover"
   ],
 
@@ -61,7 +60,11 @@ module.exports = {
   // globalTeardown: null,
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  globals: {
+    'ts-jest': {
+      isolatedModules: false,
+    },
+  },
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -72,6 +75,7 @@ module.exports = {
   // ],
 
   // An array of file extensions your modules use
+  moduleFileExtensions: ['js', 'json', 'ts'],
   // moduleFileExtensions: [
   //   "js",
   //   "json",
@@ -115,7 +119,7 @@ module.exports = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: 'src',
+  rootDir: 'src',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -135,7 +139,6 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-jsdom",
   testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
@@ -156,7 +159,7 @@ module.exports = {
   // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  // testRegex: [],
+  // testRegex: '\\.spec\\.ts$',
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: null,
@@ -171,7 +174,9 @@ module.exports = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  // transform: null,
+  transform: {
+    '^.+\\.(t|j)s$': 'ts-jest',
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

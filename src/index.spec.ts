@@ -88,7 +88,7 @@ describe('RxJS awaitable Observables', () => {
       } catch (e) {
         // assert
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(e.message).toMatch(MSG);
+        expect((e as Error).message).toMatch(MSG);
       }
     });
 

@@ -1,6 +1,7 @@
 import { Observable, Subscription, EmptyError } from 'rxjs';
 
 declare module 'rxjs' {
+    // eslint-disable-next-line no-shadow
   export interface Observable<T> {
     then<TResult1 = T, TResult2 = never>(
         onFulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
